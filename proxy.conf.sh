@@ -1,3 +1,11 @@
+<<comment
+__     ______    _   _ 
+\ \   / / __ )  / | / |
+ \ \ / /|  _ \  | | | |
+  \ V / | |_) | | | | |
+   \_/  |____/  |_| |_|
+comment
+                       
 #!/bin/bash
 
 echo "Set up your proxy credentials (if your proxy requires authentication)."
