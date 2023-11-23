@@ -1,0 +1,7 @@
+	1) SUPPOSE I UNSET PROXY. NOW WHEN I REOPEN A NEW TERMINAL (WHILE BEING CONNECTED TO PROXY), BY DEFAULT THE HTTP_PROXY AND HTTPS_PROXY VARIABLES GET SET TO HTTP://IP_ADDRESS:PORT/ OF THE PROXY. CHECK TO SEE IF WE CAN STILL PUSH WITHOUT PROXY.
+		- it doesnt. have to reopen a terminal when connected without proxy. this will not set any proxy env by default. if the new terminal was opened while being connected to proxy, then we cannot push in that session even if we remove proxy. we have to open a new terminal that will update the env of proxy to none.
+		- if i unset, remove proxy, and then open a new terminal, it works as no default http[s]_proxy is set.
+	
+	2) AUTO-UPDATE CURRENT TERMINAL SESSION WITH NEW ENVIRONMENT VARIABLES.
+	3) PROXY CAN ALSO BE SET IN ~/PROFILE, ~/ETC/ENVIRONMENT, ETC. UNSET FROM HERE AS WELL.
+	
