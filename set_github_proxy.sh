@@ -29,27 +29,16 @@ then
 		echo "Please run proxy.conf.sh first to set up your proxy credentials."
 		exit 1
 	fi
-	USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" $(dirname "${0}")/proxy.conf.txt))
-	PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" $(dirname "${0}")/proxy.conf.txt))
+	
 	echo "Adding proxy to ~/.gitconfig ..."
 	$(git config --global http.proxy http://$USERNAME:$PASSWORD@$ADDRESS:$PORT)
 	$(git config --global https.proxy http://$USERNAME:$PASSWORD@$ADDRESS:$PORT)
 
-	# remove any extra/clutter exports of proxy
-	sed -i -r "/^[[:blank:]]*export[[:blank:]]+http\_proxy=.*/d" ~/.bashrc
-	sed -i -r "/^[[:blank:]]*export[[:blank:]]+https\_proxy=.*/d" ~/.bashrc
+	. ./set_proxy_env.sh
 
-	# append new proxy export
-	echo "export http_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
-	echo "export https_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
-
-elif [[ $FLAG == "n"  ]]
-then
+else
 	$(git config --global http.proxy http://$ADDRESS:$PORT)
 	$(git config --global https.proxy http://$ADDRESS:$PORT)
-else
-	echo "Invalid input. Please type y/Y/n/N"
-	exit 1
 fi
 
 

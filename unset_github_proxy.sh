@@ -16,10 +16,7 @@ then
 else
 	$(git config --global --unset https.proxy)
 	$(git config --global --unset http.proxy)
-	unset http_proxy
-	unset https_proxy
-	unset HTTP_PROXY
-	unset HTTPS_PROXY
+	. ./unset_proxy_env.sh
 	echo "Unset proxy from environment variables and ~/.gitconfig."
 fi
 
@@ -69,6 +66,7 @@ then
 
 		if [[ $? -eq 0 ]]
 		then
+			. ~/.bashrc
 			echo "Unset proxy from $BASHRC_PATH"
 			echo "Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
 			exit 0
@@ -87,5 +85,3 @@ else
 	echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 	exit 0
 fi
-
-source $BASHRC_PATH
