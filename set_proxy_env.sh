@@ -10,5 +10,8 @@ sed -i -r "/^[[:blank:]]*export[[:blank:]]+http\_proxy=.*/d" ~/.bashrc
 sed -i -r "/^[[:blank:]]*export[[:blank:]]+https\_proxy=.*/d" ~/.bashrc
 
 # append new proxy export
+export http_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
+export https_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
+
 echo "export http_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
 echo "export https_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc

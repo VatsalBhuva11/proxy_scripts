@@ -66,7 +66,7 @@ then
 
 		if [[ $? -eq 0 ]]
 		then
-			. ~/.bashrc
+			. ./unset_proxy_env.sh
 			echo "Unset proxy from $BASHRC_PATH"
 			echo "Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
 			exit 0
