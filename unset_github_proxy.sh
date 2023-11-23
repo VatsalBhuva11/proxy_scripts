@@ -16,7 +16,11 @@ then
 else
 	$(git config --global --unset https.proxy)
 	$(git config --global --unset http.proxy)
-	echo "Unset proxy from ~/.gitconfig."
+	unset http_proxy
+	unset https_proxy
+	unset HTTP_PROXY
+	unset HTTPS_PROXY
+	echo "Unset proxy from environment variables and ~/.gitconfig."
 fi
 
 BASHRC_PATH=~/.bashrc
@@ -59,15 +63,12 @@ then
 	if [[ $(echo $CHOICE | tr '[:upper:]' '[:lower:]') == "y" ]]
 	then
 		
-		unset http_proxy
-		unset https_proxy
 		# Individually remove the proxy. can also use loop as stated in the comment above.
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+http_proxy/d' $BASHRC_PATH
 		sed -i -E '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
 
 		if [[ $? -eq 0 ]]
 		then
-			source $BASHRC_PATH
 			echo "Unset proxy from $BASHRC_PATH"
 			echo "Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
 			exit 0
@@ -87,7 +88,4 @@ else
 	exit 0
 fi
 
-
-
-
-
+source $BASHRC_PATH
