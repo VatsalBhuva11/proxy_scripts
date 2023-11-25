@@ -64,11 +64,11 @@ then
 	if [[ $(echo $CHOICE | tr '[:upper:]' '[:lower:]') == "y" ]]
 	then
 		
-		unset http_proxy
-		unset https_proxy
 		# Individually remove the proxy. can also use loop as stated in the comment above.
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+http_proxy/d' $BASHRC_PATH
 		sed -i -E '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
+		
+		. $(dirname ${0})/unset_proxy_env.sh
 
 		if [[ $? -eq 0 ]]
 		then
