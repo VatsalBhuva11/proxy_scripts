@@ -9,24 +9,24 @@ comment
 
 echo "Setting proxy for npm..."
 
-ADDRESS=$(sed "s/ADDRESS=\(.*\)/\1/" < <(grep "ADDRESS=.*" ${PWD}/proxy.conf.txt))
-PORT=$(sed "s/PORT=\([0-9]*\)/\1/" < <(grep "PORT=[0-9]*" ${PWD}/proxy.conf.txt))
-USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" ${PWD}/proxy.conf.txt))
-PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" ${PWD}/proxy.conf.txt))
+ADDRESS=$(sed "s/ADDRESS=\(.*\)/\1/" < <(grep "ADDRESS=.*" $(dirname "${0}")/proxy.conf.txt))
+PORT=$(sed "s/PORT=\([0-9]*\)/\1/" < <(grep "PORT=[0-9]*" $(dirname "${0}")/proxy.conf.txt))
+USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" $(dirname "${0}")/proxy.conf.txt))
+PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" $(dirname "${0}")/proxy.conf.txt))
 
 [[ ${#USERNAME} -gt 0 && ${#PASSWORD} -gt 0 ]] && FLAG="y" || "n"
 
 
 if [[ $FLAG == "y" ]]
 then
-	if [[ ! -f ${PWD}/proxy.conf.txt ]]
+	if [[ ! -f $(dirname "${0}")/proxy.conf.txt ]]
 	then
 		echo "Please run proxy.conf.sh first to set up your proxy credentials."
 		exit 1
 	fi
 
-	USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" ${PWD}/proxy.conf.txt))
-	PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" ${PWD}/proxy.conf.txt))
+	USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" $(dirname "${0}")/proxy.conf.txt))
+	PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" $(dirname "${0}")/proxy.conf.txt))
 	echo "Adding proxy to ~/.npmrc ..."
 	npm config set proxy http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
 	npm config set https-proxy http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
