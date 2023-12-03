@@ -9,6 +9,8 @@
 ```bash
 git clone https://github.com/VatsalBhuva11/proxy_scripts.git
 cd proxy_scripts
+```
+```bash
 ./setup.sh
 ```
 
