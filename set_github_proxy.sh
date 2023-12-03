@@ -34,7 +34,7 @@ then
 	$(git config --global http.proxy http://$USERNAME:$PASSWORD@$ADDRESS:$PORT)
 	$(git config --global https.proxy http://$USERNAME:$PASSWORD@$ADDRESS:$PORT)
 
-	. ./set_proxy_env.sh
+	. $(dirname ${0})/set_proxy_env.sh
 
 else
 	$(git config --global http.proxy http://$ADDRESS:$PORT)
