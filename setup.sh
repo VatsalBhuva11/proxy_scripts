@@ -5,11 +5,11 @@ chmod +x $(dirname "${0}")/*.sh
 
 #add the path to the .bashrc file
 
-if ! grep -q "export PATH=\$PATH:$(dirname ${0})" ~/.bashrc; then
-    echo "export PATH=\$PATH:$(dirname ${0})" >> ~/.bashrc
+if ! grep -q "export PATH=\$PATH:$(cd $(dirname ${0}) && pwd)" ~/.bashrc; then
+    echo "export PATH=\$PATH:$(cd $(dirname ${0}) && pwd)" >> ~/.bashrc
 fi
 
 #source the .bashrc file
 source ~/.bashrc
 
-./proxy.conf.sh
+$(dirname ${0})/proxy.conf.sh
