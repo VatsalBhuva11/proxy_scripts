@@ -11,6 +11,7 @@ comment
 echo "Set up your proxy credentials (if your proxy requires authentication)."
 read -p "Enter proxy address (eg: 111.22.3.4): " address
 read -p "Enter proxy port (eg: 8080): " port
+# -z flag checks if the string is empty
 if [ -z "$address" ] || [ -z "$port" ]; then
     echo "Proxy address and port cannot be empty."
     exit 1
