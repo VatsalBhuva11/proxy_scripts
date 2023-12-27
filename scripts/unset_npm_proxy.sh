@@ -8,20 +8,24 @@ comment
 
 #!/bin/bash
 
-echo "Unsetting GitHub proxy globally..."
+echo "Unsetting npm proxy globally..."
 
-if [[ ! -f ~/.gitconfig ]]
+if [[ ! -f ~/.npmrc ]]
 then
-	echo "Skipping unsetting from ~/.gitconfig (file not found)..."
+	echo "Skipping unsetting from ~/.npmrc (file not found)..."
 else
-	$(git config --global --unset https.proxy)
-	$(git config --global --unset http.proxy)
-	. ./unset_proxy_env.sh
-	echo "Unset proxy from environment variables and ~/.gitconfig."
+	npm config rm proxy
+	npm config rm https-proxy
+	if [[ ! -f ~/.npmrc ]]
+	then
+		touch ~/.npmrc
+	fi
+	echo "Unset proxy from ~/.npmrc."
 fi
 
 BASHRC_PATH=~/.bashrc
 COUNT=0
+
 <<comment
 previous logic:
 grep -P "^\s*export\s+(http|https|ftp)_proxy.*" "$BASHRC_PATH" | while IFS= read -r line ; do
@@ -52,23 +56,29 @@ comment
 if [[ $COUNT -gt 0 ]];
 then
 	echo
-	echo "GitHub proxy may also be configured in the ~/.bashrc file"
+	echo "npm proxy may also be configured in the ~/.bashrc file"
 	echo "Allow to unset the http_proxy and https_proxy ENV variables?"
 	echo "Note: This may affect the use of proxy in other apps."
 	read -p "(y or n): " CHOICE
 
-	if [[ $(echo $CHOICE | tr '[:upper:]' '[:lower:]') == "y" ]]
+    if [[ "$(echo $CHOICE | tr '[:upper:]' '[:lower:]')" = "y" || -z "$CHOICE" ]]
 	then
 		
 		# Individually remove the proxy. can also use loop as stated in the comment above.
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+http_proxy/d' $BASHRC_PATH
-		sed -i -E '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
+		sed -i -r '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
+		sed -i -r '/^[[:blank:]]*export[[:blank:]]+ftp_proxy/d' $BASHRC_PATH
 
+		
+		. $(dirname ${0})/unset_proxy_env.sh
+
+        # if previous command executed properly.
 		if [[ $? -eq 0 ]]
 		then
-			. $(dirname ${0})/unset_proxy_env.sh
+			source $BASHRC_PATH
 			echo "Unset proxy from $BASHRC_PATH"
-			echo "Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
+			echo "Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
+			echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 			exit 0
 		else
 			echo "Failed to unset proxy from $BASHRC_PATH"
@@ -76,12 +86,17 @@ then
 		fi
 
 	else
-		echo "GitHub proxy is not fully unset and may hamper the usage of Git"
+		echo "GitHub proxy is not fully unset and may hamper the usage of npm"
 		exit
 	fi
 else
 	echo
-	echo "Successfully removed Git proxy requirements! You can now push/pull/clone etc without a proxy."
+	echo "Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
 	echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 	exit 0
 fi
+
+
+
+
+

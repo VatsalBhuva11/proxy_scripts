@@ -17,10 +17,11 @@ echo "Setting proxy for Git..."
 # < < is a process substitution operator. 
 # it temporarily creates a file from the output of the command, and passes that as an input to the other command
 # using just < would have treated the output of the command as a file name, and tried to open it for reading, which would have failed.
-ADDRESS=$(sed "s/ADDRESS=\(.*\)/\1/" < <(grep "ADDRESS=.*" $(dirname ${0})/proxy.conf.txt))
-PORT=$(sed "s/PORT=\([0-9]*\)/\1/" < <(grep "PORT=[0-9]*" $(dirname ${0})/proxy.conf.txt))
-USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" $(dirname ${0})/proxy.conf.txt))
-PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" $(dirname ${0})/proxy.conf.txt))
+# \(...\) creates a capturing group in the sed command.
+ADDRESS=$(grep "ADDRESS=.*" $(dirname ${0})/proxy.conf.txt | sed "s/ADDRESS=\(.*\)/\1/")
+PORT=$(grep "PORT=[0-9]*" $(dirname ${0})/proxy.conf.txt | sed "s/PORT=\([0-9]*\)/\1/")
+USERNAME=$(grep "USERNAME=.*" $(dirname ${0})/proxy.conf.txt | sed "s/USERNAME=\(.*\)/\1/")
+PASSWORD=$(grep "PASSWORD=.*" $(dirname ${0})/proxy.conf.txt | sed "s/PASSWORD=\(.*\)/\1/")
 
 [[ ${#USERNAME} -gt 0 && ${#PASSWORD} -gt 0 ]] && FLAG="y" || "n"
 

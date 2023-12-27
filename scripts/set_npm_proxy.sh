@@ -9,12 +9,13 @@ comment
 
 echo "Setting proxy for npm..."
 
-ADDRESS=$(sed "s/ADDRESS=\(.*\)/\1/" < <(grep "ADDRESS=.*" $(dirname ${0})/proxy.conf.txt))
-PORT=$(sed "s/PORT=\([0-9]*\)/\1/" < <(grep "PORT=[0-9]*" $(dirname ${0})/proxy.conf.txt))
-USERNAME=$(sed "s/USERNAME=\(.*\)/\1/" < <(grep "USERNAME=.*" $(dirname ${0})/proxy.conf.txt))
-PASSWORD=$(sed "s/PASSWORD=\(.*\)/\1/" < <(grep "PASSWORD=.*" $(dirname ${0})/proxy.conf.txt))
+ADDRESS=$(grep "ADDRESS=.*" $(dirname ${0})/proxy.conf.txt | sed "s/ADDRESS=\(.*\)/\1/")
+PORT=$(grep "PORT=[0-9]*" $(dirname ${0})/proxy.conf.txt | sed "s/PORT=\([0-9]*\)/\1/")
+USERNAME=$(grep "USERNAME=.*" $(dirname ${0})/proxy.conf.txt | sed "s/USERNAME=\(.*\)/\1/")
+PASSWORD=$(grep "PASSWORD=.*" $(dirname ${0})/proxy.conf.txt | sed "s/PASSWORD=\(.*\)/\1/")
 
 [[ ${#USERNAME} -gt 0 && ${#PASSWORD} -gt 0 ]] && FLAG="y" || "n"
+# [[ ! -z "${USERNAME}" && ! -z "${PASSWORD}" ]] && FLAG="y" || "n"
 
 
 if [[ $FLAG == "y" ]]
@@ -34,6 +35,7 @@ then
 	# remove any extra/clutter exports of proxy
         sed -i -r "/^[[:blank:]]*export[[:blank:]]+http\_proxy=.*/d" ~/.bashrc
         sed -i -r "/^[[:blank:]]*export[[:blank:]]+https\_proxy=.*/d" ~/.bashrc
+        
 
         # append new proxy export
         echo "export http_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
@@ -73,7 +75,3 @@ else
 	echo "Some error occurred while setting up the proxy. Try again"
 	exit 1
 fi
-
-
-#https-proxy=http://IIT2022004:Cristianocr7%23@172.31.2.3:8080
-#export http_proxy="http://IIT2022004:Cristianocr7%23@172.31.2.3:8080"

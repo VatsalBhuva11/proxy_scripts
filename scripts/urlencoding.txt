@@ -1,0 +1,13 @@
+Name Symbol URL-Encoding
+Hashtag ("#") %23
+Dollar ("$") %24
+Ampersand ("&") %26
+Plus ("+") %2B
+Comma (",") %2C
+Forward-slash ("/")	%2F
+Colon (":")	%3A
+Semi-colon (";") %3B
+Equals ("=") %3D
+Question-mark ("?")	%3F
+'At'-symbol ("@") %40
+Backslash ("\")	%92
