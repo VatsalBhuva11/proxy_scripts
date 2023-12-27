@@ -5,14 +5,18 @@ __     ______    _   _
   \ V / | |_) | | | | |
    \_/  |____/  |_| |_|
 comment
-                       
+
 #!/bin/bash
 
+GREEN='\033[0;32m'
+RED='\033[0;31m'            
+
 echo "Set up your proxy credentials (if your proxy requires authentication)."
-read -p "Enter proxy address (eg: 111.22.3.4): " address
-read -p "Enter proxy port (eg: 8080): " port
+read -p "Enter proxy address (eg: 111.22.3.4): " ADDRESS
+read -p "Enter proxy port (eg: 8080): " PORT
 # -z flag checks if the string is empty
-if [ -z "$address" ] || [ -z "$port" ]; then
+if [[ -z "$ADDRESS"  ||  -z "$PORT" ]]
+then
     echo "Proxy address and port cannot be empty."
     exit 1
 fi
@@ -34,3 +38,10 @@ echo "PORT=$port" >> $FILE
 echo "USERNAME=$username" >> $FILE
 echo "PASSWORD=$password" >> $FILE
 echo
+
+if [[ $? -eq 0 ]]
+then
+    echo -e "${GREEN}Successfully set proxy credentials!"
+else
+    echo -e "${RED}Failed to set proxy credentials!"
+fi

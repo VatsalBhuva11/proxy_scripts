@@ -8,6 +8,11 @@ comment
 
 #!/bin/bash
 
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+WHITE='\e[0m'
+YELLOW='\033[0;33m'
+
 echo "Unsetting GitHub proxy globally..."
 
 if [[ ! -f ~/.gitconfig ]]
@@ -16,8 +21,7 @@ then
 else
 	$(git config --global --unset https.proxy)
 	$(git config --global --unset http.proxy)
-	. ./unset_proxy_env.sh
-	echo "Unset proxy from environment variables and ~/.gitconfig."
+	echo -e "${GREEN}Unset proxy from ${YELLOW}~/.gitconfig."
 fi
 
 BASHRC_PATH=~/.bashrc
@@ -36,7 +40,7 @@ done < <(grep -P "^\s*export\s+(http_proxy|https_proxy|ftp_proxy).*" "$BASHRC_PA
 if [[ $COUNT -gt 0 ]];
 then
 	echo
-	echo "GitHub proxy may also be configured in the ~/.bashrc file"
+	echo -e "${WHITE}GitHub proxy may also be configured in the ~/.bashrc file"
 	echo "Allow to unset the http_proxy and https_proxy ENV variables?"
 	echo "Note: This may affect the use of proxy in other apps."
 	read -p "(y or n): " CHOICE
@@ -51,24 +55,27 @@ then
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+ftp_proxy/d' $BASHRC_PATH
 
+        . $(dirname ${0})/unset_proxy_env.sh
+
 		if [[ $? -eq 0 ]]
 		then
-			. $(dirname ${0})/unset_proxy_env.sh
-			echo "Unset proxy from $BASHRC_PATH"
+			source $BASHRC_PATH
+			echo -e "${GREEN}Unset proxy from ${YELLOW}$BASHRC_PATH ${GREEN}and env variables."
 			echo "Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
+			echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 			exit 0
 		else
-			echo "Failed to unset proxy from $BASHRC_PATH"
+			echo -e "${RED}Failed to unset proxy from $BASHRC_PATH"
 			exit 1
 		fi
 
 	else
-		echo "GitHub proxy is not fully unset and may hamper the proxy configuration of Git."
+		echo -e "${RED}GitHub proxy is not fully unset and may hamper the proxy configuration of Git."
 		exit
 	fi
 else
 	echo
-	echo "Successfully removed Git proxy requirements! You can now push/pull/clone etc without a proxy."
-	echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
+    echo -e "${GREEN}Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
+    echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 	exit 0
 fi

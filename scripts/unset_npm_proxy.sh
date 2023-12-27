@@ -8,6 +8,11 @@ comment
 
 #!/bin/bash
 
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+WHITE='\e[0m'
+YELLOW='\033[0;33m'
+
 echo "Unsetting npm proxy globally..."
 
 if [[ ! -f ~/.npmrc ]]
@@ -16,11 +21,7 @@ then
 else
 	npm config rm proxy
 	npm config rm https-proxy
-	if [[ ! -f ~/.npmrc ]]
-	then
-		touch ~/.npmrc
-	fi
-	echo "Unset proxy from ~/.npmrc."
+	echo -e "${GREEN}Unset proxy from ${YELLOW}~/.npmrc."
 fi
 
 BASHRC_PATH=~/.bashrc
@@ -56,7 +57,7 @@ comment
 if [[ $COUNT -gt 0 ]];
 then
 	echo
-	echo "npm proxy may also be configured in the ~/.bashrc file"
+	echo -e "${WHITE}npm proxy may also be configured in the ~/.bashrc file"
 	echo "Allow to unset the http_proxy and https_proxy ENV variables?"
 	echo "Note: This may affect the use of proxy in other apps."
 	read -p "(y or n): " CHOICE
@@ -69,29 +70,28 @@ then
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+ftp_proxy/d' $BASHRC_PATH
 
-		
 		. $(dirname ${0})/unset_proxy_env.sh
 
         # if previous command executed properly.
 		if [[ $? -eq 0 ]]
 		then
 			source $BASHRC_PATH
-			echo "Unset proxy from $BASHRC_PATH"
+			echo -e "${GREEN}Unset proxy from ${YELLOW}$BASHRC_PATH ${GREEN}and env variables."
 			echo "Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
 			echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 			exit 0
 		else
-			echo "Failed to unset proxy from $BASHRC_PATH"
+			echo -e "${RED}Failed to unset proxy from ${YELLOW}$BASHRC_PATH"
 			exit 1
 		fi
 
 	else
-		echo "GitHub proxy is not fully unset and may hamper the usage of npm"
+		echo -e "${RED}npm proxy is not fully unset and may hamper the usage of npm"
 		exit
 	fi
 else
 	echo
-	echo "Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
+	echo -e "${GREEN}Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
 	echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
 	exit 0
 fi
