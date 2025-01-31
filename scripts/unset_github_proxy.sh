@@ -13,6 +13,12 @@ RED='\033[0;31m'
 WHITE='\e[0m'
 YELLOW='\033[0;33m'
 
+echo "Unsetting current env variables..."
+unset HTTP_PROXY
+unset HTTPS_PROXY
+unset http_proxy
+unset https_proxy
+
 echo "Unsetting GitHub proxy globally..."
 
 if [[ ! -f ~/.gitconfig ]]
@@ -31,10 +37,11 @@ COUNT=0
 #COUNT variable to see if there is any EXPORT HTTP/HTTPS command set in ~/.bashrc
 while IFS= read line; do
     ((COUNT+=1))
-done < <(grep -P "^\s*export\s+(http_proxy|https_proxy|ftp_proxy).*" "$BASHRC_PATH")
+done < <(grep -P -i "^\s*export\s+(http_proxy|https_proxy|ftp_proxy|HTTP_PROXY|HTTPS_PROXY).*" "$BASHRC_PATH")
 #The outer < is a standard input redirection operator, and the inner <(...) is the process substitution. Process substitution is needed here
 #as the COUNT variable needs to persist across all the | operations.
 
+echo $COUNT
 
 # Use a while loop to read lines from the file
 if [[ $COUNT -gt 0 ]];
@@ -55,7 +62,7 @@ then
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+ftp_proxy/d' $BASHRC_PATH
 
-        . $(dirname ${0})/unset_proxy_env.sh
+        . /home/vbuntu/Desktop/Vatsal/Programming/proxy_scripts/scripts/unset_proxy_env.sh
 
 		if [[ $? -eq 0 ]]
 		then
@@ -63,19 +70,15 @@ then
 			echo -e "${GREEN}Unset proxy from ${YELLOW}$BASHRC_PATH ${GREEN}and env variables."
 			echo "Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
 			echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
-			exit 0
 		else
 			echo -e "${RED}Failed to unset proxy from $BASHRC_PATH"
-			exit 1
 		fi
 
 	else
 		echo -e "${RED}GitHub proxy is not fully unset and may hamper the proxy configuration of Git."
-		exit
 	fi
 else
 	echo
     echo -e "${GREEN}Successfully removed GitHub proxy requirements! You can now push/pull/clone etc. without a proxy."
     echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
-	exit 0
 fi

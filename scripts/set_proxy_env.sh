@@ -7,7 +7,7 @@ WHITE='\e[0m'
 if [[ ! -f $(dirname ${0})/proxy.conf.txt ]]
 then
     echo -e "${RED}Please run proxy.conf.sh first to set up your proxy credentials."
-    exit 1
+    return 1
 fi
 
 ADDRESS=$(grep "ADDRESS=.*" $(dirname ${0})/proxy.conf.txt | sed "s/ADDRESS=\(.*\)/\1/")
@@ -18,6 +18,8 @@ PASSWORD=$(grep "PASSWORD=.*" $(dirname ${0})/proxy.conf.txt | sed "s/PASSWORD=\
 # remove any extra/clutter exports of proxy
 sed -i -r "/^[[:blank:]]*export[[:blank:]]+http\_proxy=.*/d" ~/.bashrc
 sed -i -r "/^[[:blank:]]*export[[:blank:]]+https\_proxy=.*/d" ~/.bashrc
+sed -i -r "/^[[:blank:]]*export[[:blank:]]+HTTP\_PROXY=.*/d" ~/.bashrc
+sed -i -r "/^[[:blank:]]*export[[:blank:]]+HTTPS\_PROXY=.*/d" ~/.bashrc
 
 if [[ ! -z "$USERNAME" && ! -z "$PASSWORD" ]]
 then    
@@ -32,15 +34,21 @@ if [[ $FLAG == "y" ]]
 then
     export http_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
     export https_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
+    export HTTP_PROXY=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
+    export HTTPS_PROXY=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT
 
     echo "export http_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
     echo "export https_proxy=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
+    echo "export HTTP_PROXY=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
+    echo "export HTTPS_PROXY=http://$USERNAME:$PASSWORD@$ADDRESS:$PORT" >> ~/.bashrc
 else
     export http_proxy=http://$ADDRESS:$PORT
     export https_proxy=http://$ADDRESS:$PORT
 
     echo "export http_proxy=http://$ADDRESS:$PORT" >> ~/.bashrc
     echo "export https_proxy=http://$ADDRESS:$PORT" >> ~/.bashrc
+    echo "export HTTP_PROXY=http://$ADDRESS:$PORT" >> ~/.bashrc
+    echo "export HTTPS_PROXY=http://$ADDRESS:$PORT" >> ~/.bashrc
 fi
 
 if [[ $? -eq 0 ]]
@@ -48,5 +56,5 @@ then
     echo -e "${GREEN}Successfully set proxy in ${YELLOW}~/.bashrc!"
 else    
     echo -e "${RED}Failed to add proxy to ${YELLOW}~/.bashrc!"
-    exit 1
+    return 1
 fi

@@ -38,13 +38,13 @@ comment
 #COUNT variable to see if there is any EXPORT HTTP/HTTPS command set in ~/.bashrc
 while IFS= read line; do
     ((COUNT+=1))
-done < <(grep -P "^\s*export\s+(http_proxy|https_proxy|ftp_proxy).*" "$BASHRC_PATH")
+done < <(grep -P -i "^\s*export\s+(http_proxy|https_proxy|ftp_proxy).*" "$BASHRC_PATH")
 #The outer < is a standard input redirection operator, and the inner <(...) is the process substitution. Process substitution is needed here
 #as the COUNT variable needs to persist across all the | operations.
 
 <<comment
 Can also use loop for removing any kind of proxy. In this case though, remove only http/https individually.
-grep -P "^\s*export\s+(http|https|ftp)_proxy.*" "$BASHRC_PATH" | while IFS= read line ; do
+grep -P -i "^\s*export\s+(http|https|ftp)_proxy.*" "$BASHRC_PATH" | while IFS= read line ; do
     # Escape special characters in the line
     escaped_line=$(printf '%s\n' "$line" | sed 's/[\/&]/\\&/g')
     # Use sed to delete the line in place
@@ -70,7 +70,7 @@ then
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+https_proxy/d' $BASHRC_PATH
 		sed -i -r '/^[[:blank:]]*export[[:blank:]]+ftp_proxy/d' $BASHRC_PATH
 
-		. $(dirname ${0})/unset_proxy_env.sh
+		. /home/vbuntu/Desktop/Vatsal/Programming/proxy_scripts/scripts/unset_proxy_env.sh
 
         # if previous command executed properly.
 		if [[ $? -eq 0 ]]
@@ -79,21 +79,21 @@ then
 			echo -e "${GREEN}Unset proxy from ${YELLOW}$BASHRC_PATH ${GREEN}and env variables."
 			echo "Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
 			echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
-			exit 0
+			return 0
 		else
 			echo -e "${RED}Failed to unset proxy from ${YELLOW}$BASHRC_PATH"
-			exit 1
+			return 1
 		fi
 
 	else
 		echo -e "${RED}npm proxy is not fully unset and may hamper the usage of npm"
-		exit
+		return
 	fi
 else
 	echo
 	echo -e "${GREEN}Successfully removed npm proxy requirements! You can now install npm libraries without a proxy."
 	echo "Please restart this terminal session, or open a new terminal session for the changes to be made."
-	exit 0
+	return 0
 fi
 
 

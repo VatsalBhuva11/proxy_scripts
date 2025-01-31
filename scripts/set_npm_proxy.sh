@@ -16,7 +16,7 @@ echo "Setting proxy for npm..."
 if [[ ! -f $(dirname ${0})/proxy.conf.txt ]]
 then
     echo -e "${RED}Please run proxy.conf.sh first to set up your proxy credentials."
-    exit 1
+    return 1
 fi
 
 ADDRESS=$(grep "ADDRESS=.*" $(dirname ${0})/proxy.conf.txt | sed "s/ADDRESS=\(.*\)/\1/")
@@ -43,7 +43,7 @@ then
         echo -e "${GREEN}Successfully set proxy in ${YELLOW}~/.npmrc!"
     else    
         echo -e "${RED}Failed to add proxy to ${YELLOW}~/.npmrc!"
-        exit 1
+        return 1
     fi
 
     . $(dirname ${0})/set_proxy_env.sh
@@ -59,13 +59,13 @@ then
         echo -e "${GREEN}Successfully set proxy in ${YELLOW}~/.npmrc!"
     else    
         echo -e "${RED}Failed to add proxy to ${YELLOW}~/.npmrc!"
-        exit 1
+        return 1
     fi
 
     . $(dirname ${0})/set_proxy_env.sh
 else
 	echo -e "${RED}Invalid input. Please type y/Y/n/N"
-	exit 1
+	return 1
 fi
 
 
@@ -75,12 +75,12 @@ then
 	if [[ $? -eq 0 ]]
 	then
 		echo -e "${GREEN}Please restart this terminal session, or open a new terminal session for the changes to be made."
-        exit 0
+        return 0
 	else
 		echo -e "${RED}Failed to add proxy to ${YELLOW}~/.npmrc. ${RED}Please try again later"
-        exit 1
+        return 1
 	fi
 else
 	echo -e "${RED}Some error occurred while setting up the proxy. Try again"
-	exit 1
+	return 1
 fi
